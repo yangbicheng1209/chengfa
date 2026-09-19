@@ -1,0 +1,493 @@
+<meta charset="utf-8">
+<title>乘法机器人基地</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Bungee&display=swap">
+<style>
+:root{
+  --bg:#0f1526; --panel:#1b2540; --panel2:#243256; --line:#35477a;
+  --text:#f2f6ff; --muted:#93a4cc;
+  --energy:#3ee0ff; --orange:#ff8a3d; --star:#ffd23f; --ok:#3ddc84; --bad:#ff5468;
+  --num:'Bungee','Arial Black','Helvetica Neue',sans-serif;
+  --cn:'ZCOOL KuaiLe','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--cn);font-size:18px;line-height:1.35;
+  background-image:radial-gradient(circle at 20% 0%,#1d2b52 0,transparent 45%),
+    repeating-linear-gradient(0deg,transparent 0 38px,rgba(62,224,255,.045) 38px 40px);
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+*{box-sizing:border-box}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--energy);outline-offset:2px}
+.app{max-width:540px;margin:0 auto;min-height:100%;padding:12px 16px 28px;display:flex;flex-direction:column;gap:14px}
+.screen[hidden]{display:none}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-size:22px;letter-spacing:1px;color:var(--energy);text-shadow:0 0 12px rgba(62,224,255,.5)}
+.energy{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:14px;color:var(--muted)}
+.bar{width:90px;height:12px;border-radius:8px;background:#0b1020;border:1px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--energy),#7cf5ff);box-shadow:0 0 8px var(--energy);transition:width .4s}
+.energy b{font-family:var(--num);font-size:12px;color:var(--text);font-variant-numeric:tabular-nums}
+.icon{padding:6px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:15px}
+
+/* home */
+.hint{margin:0;color:var(--muted);font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rcard{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px 8px;border-radius:16px;
+  background:var(--panel);border:2px solid var(--line);transition:transform .15s}
+.rcard:active{transform:scale(.96)}
+.rcard.locked{opacity:.45;filter:grayscale(.6)}
+.rcard .nm{font-size:16px}
+.rcard .rw{font-size:13px;color:var(--muted)}
+.rcard .st{font-size:14px;letter-spacing:1px;color:var(--star);min-height:20px}
+.rcard.next{border-color:var(--energy);box-shadow:0 0 0 3px rgba(62,224,255,.25),0 0 18px rgba(62,224,255,.35)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.big{flex:1;min-width:140px;width:100%;padding:14px 12px;border-radius:14px;font-size:20px;background:var(--orange);color:#1a0d00;box-shadow:0 5px 0 #b95a1c;transition:transform .1s,box-shadow .1s}
+.big:active{transform:translateY(4px);box-shadow:0 1px 0 #b95a1c}
+.big.alt{background:var(--panel2);color:var(--text);box-shadow:0 5px 0 #121a31;border:1px solid var(--line)}
+.big.alt:active{box-shadow:0 1px 0 #121a31}
+.big[disabled]{opacity:.45;pointer-events:none}
+.badge{display:inline-block;min-width:26px;padding:1px 8px;border-radius:12px;background:var(--bad);color:#fff;font-family:var(--num);font-size:13px;vertical-align:middle}
+.stat{color:var(--muted);font-size:14px}
+
+/* learn */
+.ltop{display:flex;align-items:center;gap:10px}
+.ltitle{font-size:22px;margin:0}
+.ltitle small{display:block;font-size:14px;color:var(--muted)}
+.learnwrap{display:flex;gap:12px;align-items:flex-start}
+.learnwrap .robot{flex:0 0 96px}
+.klist{flex:1;display:grid;gap:6px;min-width:0}
+.krow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);text-align:left;width:100%}
+.krow .eq{font-family:var(--num);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.krow .kj{font-size:18px;color:var(--star);white-space:nowrap}
+.krow:active{background:var(--panel2)}
+
+/* quiz */
+.qtop{display:flex;align-items:center;gap:10px}
+.prog{flex:1;display:flex;gap:4px}
+.prog i{flex:1;height:8px;border-radius:4px;background:#0b1020;border:1px solid var(--line)}
+.prog i.on{background:var(--ok);border-color:var(--ok);box-shadow:0 0 6px var(--ok)}
+.timer{font-family:var(--num);font-size:22px;color:var(--orange);min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--bad);animation:blink .5s infinite alternate}
+@keyframes blink{to{opacity:.4}}
+.stage{display:flex;gap:12px;align-items:center;padding:12px;border-radius:18px;background:var(--panel);border:1px solid var(--line)}
+.robot{flex:0 0 120px;display:flex;justify-content:center}
+.robot svg{max-width:100%;height:auto}
+.robot.done svg{animation:transform-pop 1s ease-out}
+@keyframes transform-pop{0%{transform:scale(1) rotate(0)}30%{transform:scale(1.15) rotate(-8deg)}60%{transform:scale(1.2) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+.qbox{flex:1;min-width:0;text-align:center}
+.q{font-family:var(--num);font-size:44px;line-height:1.1;letter-spacing:1px;font-variant-numeric:tabular-nums;text-wrap:balance}
+.q .qm{color:var(--energy)}
+.fb{min-height:34px;margin-top:8px;font-size:24px;color:var(--star)}
+.fb.ok{color:var(--ok)}
+.fb.bad{color:var(--bad)}
+.fb small{display:block;font-size:15px;color:var(--muted)}
+.score{font-family:var(--num);font-size:48px;color:var(--star);text-shadow:0 0 14px rgba(255,210,63,.5)}
+.score small{display:block;font-family:var(--cn);font-size:14px;color:var(--muted)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ch{padding:22px 10px;border-radius:18px;background:var(--panel2);border:2px solid var(--line);font-family:var(--num);font-size:36px;
+  box-shadow:0 6px 0 #121a31;transition:transform .1s,box-shadow .1s,background .2s;font-variant-numeric:tabular-nums}
+.ch:active{transform:translateY(5px);box-shadow:0 1px 0 #121a31}
+.ch.ok{background:var(--ok);border-color:var(--ok);color:#052a15;box-shadow:0 6px 0 #1f8f55}
+.ch.bad{background:var(--bad);border-color:var(--bad);color:#fff;box-shadow:0 6px 0 #a6202f;animation:shake .4s}
+.ch.dim{opacity:.35}
+.ch[disabled]{pointer-events:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* result */
+.rwrap{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px 12px;border-radius:18px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.rwrap .robot{flex:0 0 auto}
+.rt{font-size:28px;margin:0;text-wrap:balance}
+.stars{font-size:40px;letter-spacing:6px;color:var(--star);text-shadow:0 0 14px rgba(255,210,63,.6)}
+.stars .off{color:#2a3556;text-shadow:none}
+.rmsg{color:var(--muted);font-size:16px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{padding:4px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:15px}
+.chip b{font-family:var(--num);font-size:12px;color:var(--orange);margin-right:4px}
+.conf{position:absolute;top:-10px;width:8px;height:14px;border-radius:2px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(420px) rotate(540deg);opacity:0}}
+
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.foot button{color:var(--muted);text-decoration:underline;font-size:13px}
+
+@media (max-width:400px){
+  .q{font-size:36px}.ch{font-size:30px;padding:18px 8px}.robot{flex-basis:96px}.grid{gap:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">乘法机器人基地</div>
+    <div class="energy"><span>今日能量</span><div class="bar"><i id="energyFill"></i></div><b id="energyText">0/20</b></div>
+    <button id="soundBtn" class="icon" aria-label="声音开关">声音：开</button>
+  </header>
+
+  <section id="home" class="screen">
+    <p class="hint" id="homeHint">点一个亮着的机器人，答对题目就能把它组装起来！</p>
+    <div class="grid" id="robotGrid"></div>
+    <div class="actions">
+      <button id="repairBtn" class="big alt">修理厂 <span id="repairCount" class="badge" hidden>0</span></button>
+      <button id="speedBtn" class="big alt">极速挑战</button>
+    </div>
+    <p class="stat" id="homeStat"></p>
+    <div class="foot"><span>家长：进度保存在这台设备的浏览器里</span><button id="resetBtn">清空进度</button></div>
+  </section>
+
+  <section id="learn" class="screen" hidden>
+    <div class="ltop">
+      <button class="icon backBtn">← 基地</button>
+      <h2 class="ltitle" id="ltitle"></h2>
+    </div>
+    <p class="hint">先点一点，听一听口诀。记住了就开始组装！</p>
+    <div class="learnwrap">
+      <div class="robot" id="learnRobot"></div>
+      <div class="klist" id="klist"></div>
+    </div>
+    <button class="big" id="startBtn">开始组装</button>
+  </section>
+
+  <section id="quiz" class="screen" hidden>
+    <div class="qtop">
+      <button class="icon backBtn">← 基地</button>
+      <div class="prog" id="prog"></div>
+      <div class="timer" id="timer" hidden>60</div>
+    </div>
+    <div class="stage">
+      <div class="robot" id="quizRobot"></div>
+      <div class="qbox">
+        <div class="q" id="qtext"></div>
+        <div class="fb" id="feedback"></div>
+      </div>
+    </div>
+    <div class="choices" id="choices"></div>
+  </section>
+
+  <section id="result" class="screen" hidden>
+    <div class="rwrap" id="rwrap">
+      <div class="robot" id="resultRobot"></div>
+      <h2 class="rt" id="rtitle"></h2>
+      <div class="stars" id="rstars"></div>
+      <p class="rmsg" id="rmsg"></p>
+      <div class="chips" id="rchips"></div>
+    </div>
+    <div class="actions">
+      <button class="big alt backBtn">回基地</button>
+      <button class="big" id="againBtn">再来一次</button>
+      <button class="big" id="nextBtn" hidden>下一个机器人</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const KEY='mult-robot-v1';
+const DAILY_GOAL=20;
+const ROBOTS=[
+  {n:1,name:'火花',color:'#ff5a5a'},
+  {n:2,name:'闪电',color:'#ffd23f'},
+  {n:3,name:'蓝霆',color:'#3ea0ff'},
+  {n:4,name:'钢牙',color:'#3ddc84'},
+  {n:5,name:'烈焰',color:'#ff8a3d'},
+  {n:6,name:'幻影',color:'#b56bff'},
+  {n:7,name:'巨石',color:'#c9a27a'},
+  {n:8,name:'银翼',color:'#3ee0ff'},
+  {n:9,name:'星际王',color:'#ffb800'}
+];
+const CN='零一二三四五六七八九'.split('');
+let S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:true};
+
+function load(){try{const j=localStorage.getItem(KEY);if(j)S=Object.assign(S,JSON.parse(j));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function today(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function ensureDaily(){if(S.daily.date!==today()){S.daily={date:today(),n:0};}}
+
+/* ---------- 口诀 ---------- */
+function prodCN(p){
+  if(p<10)return '得'+CN[p];
+  if(p===10)return '一十';
+  const t=Math.floor(p/10),o=p%10;
+  return (t===1?'十':CN[t]+'十')+(o?CN[o]:'');
+}
+function kouju(a,b){const x=Math.min(a,b),y=Math.max(a,b);return CN[x]+CN[y]+prodCN(x*y);}
+function makeQ(a,b){const x=Math.min(a,b),y=Math.max(a,b);return {a:x,b:y,p:x*y,key:x+'x'+y,kj:kouju(x,y)};}
+function rowQs(n){const qs=[];for(let k=1;k<=9;k++)qs.push(makeQ(k,n));return qs;}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function choicesFor(q){
+  const cand=new Set();
+  [q.p+1,q.p-1,q.p+2,q.p-2,q.a*(q.b+1),q.a*(q.b-1),(q.a+1)*q.b,(q.a-1)*q.b,q.p+10,q.p-10,q.p+q.a,q.p-q.a,q.a+q.b]
+    .forEach(v=>{if(v>0&&v!==q.p&&v<=90)cand.add(v);});
+  const arr=shuffle([...cand]).slice(0,3);
+  while(arr.length<3){const v=Math.floor(Math.random()*81)+1;if(v!==q.p&&!arr.includes(v))arr.push(v);}
+  return shuffle([q.p,...arr]);
+}
+
+/* ---------- 声音 ---------- */
+let ctx=null;
+function tone(freq,dur,type,vol,delay){
+  if(!S.sound)return;
+  try{
+    ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type||'square';o.frequency.value=freq;
+    g.gain.value=0.0001;
+    o.connect(g);g.connect(ctx.destination);
+    const t=ctx.currentTime+(delay||0);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.15,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.start(t);o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function sndOk(){tone(660,0.12,'square',0.12);tone(880,0.14,'square',0.12,0.1);tone(1320,0.2,'square',0.1,0.2);}
+function sndBad(){tone(200,0.25,'sawtooth',0.12);tone(150,0.3,'sawtooth',0.1,0.15);}
+function sndTap(){tone(520,0.06,'triangle',0.08);}
+function sndWin(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,0.25,'square',0.12,i*0.12));}
+function say(text){
+  if(!S.sound)return;
+  try{
+    if(!('speechSynthesis' in window))return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=0.85;u.pitch=1.1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- 机器人 ---------- */
+function robotSVG(r,lit,size){
+  const dark='#232d4b',ds='#3c4a75';
+  const on=i=>i<lit;
+  const f=i=>on(i)?r.color:dark, s=i=>on(i)?'#ffffff':ds;
+  const eye=on(7)?'#3ee0ff':'#2a3556';
+  const glow=on(8)?`<circle cx="60" cy="81" r="22" fill="${r.color}" opacity=".25"/>`:'';
+  return `<svg viewBox="0 0 120 150" width="${size}" height="${Math.round(size*1.25)}" role="img" aria-label="${r.name}">
+  <rect x="36" y="104" width="19" height="40" rx="6" fill="${f(0)}" stroke="${s(0)}" stroke-width="2"/>
+  <rect x="65" y="104" width="19" height="40" rx="6" fill="${f(1)}" stroke="${s(1)}" stroke-width="2"/>
+  <rect x="30" y="136" width="28" height="10" rx="4" fill="${f(0)}" stroke="${s(0)}" stroke-width="2"/>
+  <rect x="62" y="136" width="28" height="10" rx="4" fill="${f(1)}" stroke="${s(1)}" stroke-width="2"/>
+  <rect x="33" y="54" width="54" height="54" rx="9" fill="${f(2)}" stroke="${s(2)}" stroke-width="2"/>
+  <rect x="9" y="62" width="17" height="42" rx="7" fill="${f(3)}" stroke="${s(3)}" stroke-width="2"/>
+  <rect x="94" y="62" width="17" height="42" rx="7" fill="${f(4)}" stroke="${s(4)}" stroke-width="2"/>
+  <rect x="4" y="46" width="28" height="18" rx="6" fill="${f(5)}" stroke="${s(5)}" stroke-width="2"/>
+  <rect x="88" y="46" width="28" height="18" rx="6" fill="${f(6)}" stroke="${s(6)}" stroke-width="2"/>
+  <rect x="52" y="44" width="16" height="10" fill="${f(7)}"/>
+  <rect x="38" y="12" width="44" height="34" rx="8" fill="${f(7)}" stroke="${s(7)}" stroke-width="2"/>
+  <rect x="56" y="2" width="8" height="10" rx="2" fill="${f(7)}"/>
+  <circle cx="60" cy="3" r="3" fill="${on(7)?'#ffd23f':ds}"/>
+  <rect x="45" y="22" width="11" height="9" rx="2" fill="${eye}"/>
+  <rect x="64" y="22" width="11" height="9" rx="2" fill="${eye}"/>
+  <rect x="48" y="36" width="24" height="4" rx="2" fill="${on(7)?'#0f1526':ds}"/>
+  ${glow}
+  <circle cx="60" cy="81" r="15" fill="${on(8)?'#ffffff':'#151d33'}" stroke="${f(8)}" stroke-width="4"/>
+  <text x="60" y="88" text-anchor="middle" font-family="Bungee,Arial Black,sans-serif" font-size="19" fill="${on(8)?r.color:ds}">${r.n}</text>
+  </svg>`;
+}
+
+/* ---------- 界面 ---------- */
+const screens=['home','learn','quiz','result'];
+function show(id){screens.forEach(s=>{$(s).hidden=(s!==id);});window.scrollTo(0,0);}
+function isUnlocked(n){return n===1||(S.stars[n-1]||0)>=1;}
+function unlockedRows(){return ROBOTS.filter(r=>isUnlocked(r.n)).map(r=>r.n);}
+function wrongList(){return Object.keys(S.wrong).filter(k=>S.wrong[k]>0);}
+function starStr(n){let s='';for(let i=1;i<=3;i++)s+=i<=n?'<span>★</span>':'<span class="off">★</span>';return s;}
+
+function renderEnergy(){
+  ensureDaily();
+  const n=Math.min(S.daily.n,DAILY_GOAL);
+  $('energyFill').style.width=(n/DAILY_GOAL*100)+'%';
+  $('energyText').textContent=n+'/'+DAILY_GOAL;
+}
+function renderHome(){
+  renderEnergy();
+  const g=$('robotGrid');g.innerHTML='';
+  let nextMarked=false;
+  ROBOTS.forEach(r=>{
+    const st=S.stars[r.n]||0, un=isUnlocked(r.n);
+    const b=document.createElement('button');
+    b.className='rcard'+(un?'':' locked');
+    if(un&&st===0&&!nextMarked){b.classList.add('next');nextMarked=true;}
+    b.innerHTML=robotSVG(r,un?(st?9:0):0,72)+`<div class="nm">${r.name}</div><div class="rw">${CN[r.n]}的口诀</div><div class="st">${st?starStr(st):(un?'待组装':'未解锁')}</div>`;
+    b.disabled=!un;
+    b.addEventListener('click',()=>{sndTap();openLearn(r.n);});
+    g.appendChild(b);
+  });
+  const w=wrongList().length;
+  $('repairCount').hidden=w===0;$('repairCount').textContent=w;
+  $('repairBtn').disabled=w===0;
+  $('speedBtn').disabled=unlockedRows().length<2;
+  const done=ROBOTS.filter(r=>(S.stars[r.n]||0)>0).length;
+  const total=Object.values(S.stars).reduce((a,b)=>a+b,0);
+  $('homeStat').textContent=`已组装 ${done}/9 个机器人 · 共 ${total} 颗星`+(S.best?` · 极速挑战最高 ${S.best} 分`:'')+(w?` · 修理厂里有 ${w} 道题等着你`:'');
+  $('homeHint').textContent= done===9?'全部机器人组装完成！去极速挑战里刷新纪录吧。':(w>=5?'修理厂堆了不少零件，先去修一修吧！':'点一个亮着的机器人，答对题目就能把它组装起来！');
+  $('soundBtn').textContent='声音：'+(S.sound?'开':'关');
+}
+
+/* ---------- 学一学 ---------- */
+let curRow=1;
+function openLearn(n){
+  curRow=n;const r=ROBOTS[n-1];
+  $('ltitle').innerHTML=`${r.name}号<small>${CN[n]}的口诀</small>`;
+  $('learnRobot').innerHTML=robotSVG(r,(S.stars[n]||0)?9:0,96);
+  const kl=$('klist');kl.innerHTML='';
+  rowQs(n).forEach(q=>{
+    const b=document.createElement('button');b.className='krow';
+    b.innerHTML=`<span class="eq">${q.a} × ${q.b} = ${q.p}</span><span class="kj">${q.kj}</span>`;
+    b.addEventListener('click',()=>{sndTap();say(q.kj);b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');});
+    kl.appendChild(b);
+  });
+  show('learn');
+}
+
+/* ---------- 答题 ---------- */
+let Q={mode:'row',row:1,queue:[],lit:0,wrongs:0,answered:0,score:0,timeLeft:0,timer:null,busy:false,cur:null,askedWrong:{}};
+function startQuiz(mode,row){
+  clearInterval(Q.timer);
+  Q={mode,row,queue:[],lit:0,wrongs:0,answered:0,score:0,timeLeft:60,timer:null,busy:false,cur:null,askedWrong:{}};
+  if(mode==='row'){Q.queue=shuffle(rowQs(row));}
+  else if(mode==='repair'){
+    const keys=shuffle(wrongList()).slice(0,10);
+    Q.queue=keys.map(k=>{const [a,b]=k.split('x').map(Number);return makeQ(a,b);});
+  }
+  $('timer').hidden=mode!=='speed';
+  $('timer').className='timer';
+  $('feedback').textContent='';$('feedback').className='fb';
+  renderProg();renderQuizRobot();
+  show('quiz');
+  if(mode==='speed'){
+    $('timer').textContent='60';
+    Q.timer=setInterval(()=>{
+      Q.timeLeft--;$('timer').textContent=Q.timeLeft;
+      if(Q.timeLeft<=10)$('timer').classList.add('low');
+      if(Q.timeLeft<=0){clearInterval(Q.timer);finish();}
+    },1000);
+  }
+  next();
+}
+function randomQ(){
+  const rows=unlockedRows();const n=rows[Math.floor(Math.random()*rows.length)];
+  return makeQ(Math.floor(Math.random()*9)+1,n);
+}
+function renderProg(){
+  const p=$('prog');p.innerHTML='';
+  if(Q.mode==='speed'){return;}
+  const total=Q.mode==='row'?9:Q.queue.length+Q.answered;
+  for(let i=0;i<total;i++){const s=document.createElement('i');if(i<(Q.mode==='row'?Q.lit:Q.answered))s.className='on';p.appendChild(s);}
+}
+function renderQuizRobot(){
+  const box=$('quizRobot');
+  if(Q.mode==='speed'){box.innerHTML=`<div class="score">${Q.score}<small>得分</small></div>`;return;}
+  const r=ROBOTS[(Q.mode==='row'?Q.row:Q.cur?Q.cur.b:1)-1];
+  box.innerHTML=robotSVG(r,Q.mode==='row'?Q.lit:9,120);
+}
+function next(){
+  if(Q.mode==='speed'){Q.cur=randomQ();}
+  else{
+    if(!Q.queue.length){finish();return;}
+    Q.cur=Q.queue.shift();
+  }
+  Q.busy=false;
+  const q=Q.cur;
+  if(Q.mode==='repair')renderQuizRobot();
+  $('qtext').innerHTML=`${q.a} × ${q.b} = <span class="qm">?</span>`;
+  $('qtext').classList.remove('pop');void $('qtext').offsetWidth;$('qtext').classList.add('pop');
+  $('feedback').textContent='';$('feedback').className='fb';
+  const c=$('choices');c.innerHTML='';
+  choicesFor(q).forEach(v=>{
+    const b=document.createElement('button');b.className='ch';b.textContent=v;
+    b.addEventListener('click',()=>answer(v,b));
+    c.appendChild(b);
+  });
+}
+function answer(v,btn){
+  if(Q.busy)return;Q.busy=true;
+  const q=Q.cur;const ok=v===q.p;
+  const all=[...document.querySelectorAll('.ch')];
+  all.forEach(b=>{b.disabled=true;if(Number(b.textContent)===q.p)b.classList.add('ok');else if(b!==btn)b.classList.add('dim');});
+  ensureDaily();
+  if(ok){
+    sndOk();say(q.kj);
+    $('feedback').innerHTML=q.kj;$('feedback').className='fb ok';
+    S.daily.n++;
+    if(Q.mode==='row'){Q.lit++;}
+    if(Q.mode==='speed'){Q.score++;}
+    if(Q.mode==='repair'){Q.answered++;if(!Q.askedWrong[q.key]){S.wrong[q.key]=Math.max(0,(S.wrong[q.key]||0)-1);}}
+    if(Q.mode!=='repair'&&S.wrong[q.key]&&!Q.askedWrong[q.key]){S.wrong[q.key]=Math.max(0,S.wrong[q.key]-1);}
+    save();renderProg();renderQuizRobot();renderEnergy();
+    setTimeout(next,ok&&Q.mode==='speed'?700:1100);
+  }else{
+    btn.classList.add('bad');sndBad();
+    $('feedback').innerHTML=`${q.p}，${q.kj}<small>再记一记，等一下还会问哦</small>`;$('feedback').className='fb bad';
+    say(q.kj);
+    Q.wrongs++;Q.askedWrong[q.key]=true;
+    S.wrong[q.key]=Math.min(3,(S.wrong[q.key]||0)+1);
+    if(Q.mode==='row'){Q.queue.splice(Math.min(2,Q.queue.length),0,q);}
+    if(Q.mode==='repair'){Q.answered++;Q.queue.push(q);}
+    save();renderProg();
+    setTimeout(next,1900);
+  }
+}
+function finish(){
+  clearInterval(Q.timer);
+  const rw=$('rwrap');rw.querySelectorAll('.conf').forEach(e=>e.remove());
+  $('nextBtn').hidden=true;$('rchips').innerHTML='';
+  if(Q.mode==='row'){
+    const r=ROBOTS[Q.row-1];
+    const stars=Q.wrongs===0?3:Q.wrongs<=2?2:1;
+    S.stars[Q.row]=Math.max(S.stars[Q.row]||0,stars);save();
+    $('resultRobot').innerHTML=robotSVG(r,9,150);$('resultRobot').className='robot done';
+    $('rtitle').textContent=`${r.name}号 组装完成！`;
+    $('rstars').innerHTML=starStr(stars);
+    $('rmsg').textContent=Q.wrongs===0?'一题都没错，太厉害了！':`错了 ${Q.wrongs} 次，再练一遍就能拿三颗星。`;
+    if(Q.row<9)$('nextBtn').hidden=false;
+    sndWin();confetti(r.color);
+    setTimeout(()=>say(`${r.name}号组装完成`),300);
+  }else if(Q.mode==='repair'){
+    const left=wrongList().length;
+    $('resultRobot').innerHTML=robotSVG(ROBOTS[7],9,120);$('resultRobot').className='robot done';
+    $('rtitle').textContent='修理完成！';
+    $('rstars').innerHTML=starStr(Q.wrongs===0?3:Q.wrongs<=2?2:1);
+    $('rmsg').textContent=left?`修理厂里还剩 ${left} 道题，明天再来修一修。`:'修理厂空啦，所有零件都修好了！';
+    sndWin();
+  }else{
+    const isBest=Q.score>(S.best||0);
+    if(isBest){S.best=Q.score;save();}
+    $('resultRobot').innerHTML=`<div class="score">${Q.score}<small>60秒答对</small></div>`;$('resultRobot').className='robot';
+    $('rtitle').textContent=isBest&&Q.score>0?'新纪录！':'时间到！';
+    $('rstars').innerHTML=starStr(Q.score>=20?3:Q.score>=12?2:Q.score>=5?1:0);
+    $('rmsg').textContent=`最高纪录 ${S.best} 分`+(Q.wrongs?`，这次错了 ${Q.wrongs} 题，已送进修理厂。`:'。');
+    sndWin();if(isBest&&Q.score>0)confetti('#ffd23f');
+  }
+  const wk=Object.keys(Q.askedWrong);
+  if(wk.length){
+    wk.forEach(k=>{const [a,b]=k.split('x').map(Number);const c=document.createElement('span');c.className='chip';c.innerHTML=`<b>${a}×${b}=${a*b}</b>${kouju(a,b)}`;$('rchips').appendChild(c);});
+  }
+  show('result');renderEnergy();
+}
+function confetti(color){
+  const rw=$('rwrap');const cols=[color,'#3ee0ff','#ffd23f','#ffffff'];
+  for(let i=0;i<40;i++){
+    const e=document.createElement('i');e.className='conf';
+    e.style.left=Math.random()*100+'%';e.style.background=cols[i%cols.length];
+    e.style.animationDuration=(1.6+Math.random()*1.4)+'s';e.style.animationDelay=(Math.random()*.6)+'s';
+    rw.appendChild(e);
+  }
+}
+
+/* ---------- 事件 ---------- */
+document.querySelectorAll('.backBtn').forEach(b=>b.addEventListener('click',()=>{clearInterval(Q.timer);sndTap();renderHome();show('home');}));
+$('startBtn').addEventListener('click',()=>{sndTap();startQuiz('row',curRow);});
+$('repairBtn').addEventListener('click',()=>{sndTap();startQuiz('repair');});
+$('speedBtn').addEventListener('click',()=>{sndTap();startQuiz('speed');});
+$('againBtn').addEventListener('click',()=>{sndTap();if(Q.mode==='row')openLearn(Q.row);else startQuiz(Q.mode);});
+$('nextBtn').addEventListener('click',()=>{sndTap();openLearn(Q.row+1);});
+$('soundBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('soundBtn').textContent='声音：'+(S.sound?'开':'关');if(S.sound)sndTap();});
+$('resetBtn').addEventListener('click',()=>{if(confirm('确定清空全部进度吗？星星、错题和纪录都会归零。')){S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:S.sound};save();renderHome();}});
+
+load();ensureDaily();renderHome();show('home');
+})();
+</script>
