@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>乘法机器人基地</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Bungee&display=swap">
 <style>
@@ -9,6 +10,15 @@
   --num:'Bungee','Arial Black','Helvetica Neue',sans-serif;
   --cn:'ZCOOL KuaiLe','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
 }
+body.dino{--bg:#0e1a12;--panel:#17291c;--panel2:#1f3a27;--line:#2f5a3a;--muted:#9dc4a6;--energy:#8cff5e;
+  background-image:radial-gradient(circle at 20% 0%,#1b3a24 0,transparent 45%),repeating-linear-gradient(0deg,transparent 0 38px,rgba(140,255,94,.05) 38px 40px)}
+body.dino .brand{color:var(--energy);text-shadow:0 0 12px rgba(140,255,94,.45)}
+body.dino .big{background:#ffb13d;box-shadow:0 5px 0 #b3721a}
+body.dino .big:active{box-shadow:0 1px 0 #b3721a}
+body.dino .big.alt{background:var(--panel2);box-shadow:0 5px 0 #0e1f14}
+body.dino .big.alt:active{box-shadow:0 1px 0 #0e1f14}
+body.dino .ch{box-shadow:0 6px 0 #0e1f14}
+body.dino .ch:active{box-shadow:0 1px 0 #0e1f14}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--cn);font-size:18px;line-height:1.35;
   background-image:radial-gradient(circle at 20% 0%,#1d2b52 0,transparent 45%),
@@ -121,17 +131,18 @@ button:focus-visible{outline:3px solid var(--energy);outline-offset:2px}
 
 <div class="app">
   <header class="top">
-    <div class="brand">乘法机器人基地</div>
+    <div class="brand" id="brand">乘法机器人基地</div>
     <div class="energy"><span>今日能量</span><div class="bar"><i id="energyFill"></i></div><b id="energyText">0/20</b></div>
     <button id="soundBtn" class="icon" aria-label="声音开关">声音：开</button>
+    <button id="themeBtn" class="icon" aria-label="切换主题">换成恐龙</button>
   </header>
 
   <section id="home" class="screen">
     <p class="hint" id="homeHint">点一个亮着的机器人，答对题目就能把它组装起来！</p>
     <div class="grid" id="robotGrid"></div>
     <div class="actions">
-      <button id="repairBtn" class="big alt">修理厂 <span id="repairCount" class="badge" hidden>0</span></button>
-      <button id="speedBtn" class="big alt">极速挑战</button>
+      <button id="repairBtn" class="big alt"><span id="repairLabel">修理厂</span> <span id="repairCount" class="badge" hidden>0</span></button>
+      <button id="speedBtn" class="big alt"><span id="speedLabel">极速挑战</span></button>
     </div>
     <p class="stat" id="homeStat"></p>
     <div class="foot"><span>家长：进度保存在这台设备的浏览器里</span><button id="resetBtn">清空进度</button></div>
@@ -142,7 +153,7 @@ button:focus-visible{outline:3px solid var(--energy);outline-offset:2px}
       <button class="icon backBtn">← 基地</button>
       <h2 class="ltitle" id="ltitle"></h2>
     </div>
-    <p class="hint">先点一点，听一听口诀。记住了就开始组装！</p>
+    <p class="hint" id="learnHint">先点一点，听一听口诀。记住了就开始组装！</p>
     <div class="learnwrap">
       <div class="robot" id="learnRobot"></div>
       <div class="klist" id="klist"></div>
@@ -177,7 +188,7 @@ button:focus-visible{outline:3px solid var(--energy);outline-offset:2px}
     <div class="actions">
       <button class="big alt backBtn">回基地</button>
       <button class="big" id="againBtn">再来一次</button>
-      <button class="big" id="nextBtn" hidden>下一个机器人</button>
+      <button class="big" id="nextBtn" hidden>下一个</button>
     </div>
   </section>
 </div>
@@ -199,8 +210,38 @@ const ROBOTS=[
   {n:8,name:'银翼',color:'#3ee0ff'},
   {n:9,name:'星际王',color:'#ffb800'}
 ];
+const DINOS=[
+  {n:1,name:'小盗龙',color:'#ff6b6b'},
+  {n:2,name:'迅猛龙',color:'#ffd23f'},
+  {n:3,name:'三角龙',color:'#5aa9ff'},
+  {n:4,name:'剑龙',color:'#4ddc7a'},
+  {n:5,name:'甲龙',color:'#ff9a3d'},
+  {n:6,name:'翼龙',color:'#c58bff'},
+  {n:7,name:'腕龙',color:'#d2b48c'},
+  {n:8,name:'棘龙',color:'#4de3d6'},
+  {n:9,name:'霸王龙',color:'#ffb800'}
+];
+const THEMES={
+  robot:{brand:'乘法机器人基地',list:ROBOTS,unit:'机器人',build:'组装',done:'组装完成',pending:'待组装',repair:'修理厂',speed:'极速挑战',
+    hintNew:'点一个亮着的机器人，答对题目就能把它组装起来！',hintAll:'全部机器人组装完成！去极速挑战里刷新纪录吧。',hintRepair:'修理厂堆了不少零件，先去修一修吧！',
+    learnHint:'先点一点，听一听口诀。记住了就开始组装！',wrongHint:'再记一记，等一下还会问哦',repairDone:'修理完成！',repairLeft:'修理厂里还剩 {n} 道题，明天再来修一修。',repairEmpty:'修理厂空啦，所有零件都修好了！',switchLabel:'换成恐龙'},
+  dino:{brand:'乘法恐龙谷',list:DINOS,unit:'恐龙',build:'复活',done:'复活啦！',pending:'待复活',repair:'恐龙医院',speed:'恐龙赛跑',
+    hintNew:'点一只亮着的恐龙，答对题目就能把它复活！',hintAll:'所有恐龙都复活了！去恐龙赛跑里刷新纪录吧。',hintRepair:'恐龙医院里有不少小伤员，先去治一治吧！',
+    learnHint:'先点一点，听一听口诀。记住了就开始复活恐龙！',wrongHint:'再记一记，等一下还会问哦',repairDone:'治疗完成！',repairLeft:'恐龙医院里还剩 {n} 道题，明天再来治一治。',repairEmpty:'恐龙医院空啦，所有恐龙都健康了！',switchLabel:'换成机器人'}
+};
 const CN='零一二三四五六七八九'.split('');
-let S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:true};
+let S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:true,theme:'robot'};
+function T(){return THEMES[S.theme]||THEMES.robot;}
+function CR(){return T().list;}
+function drawCreature(c,lit,size){return S.theme==='dino'?dinoSVG(c,lit,size):robotSVG(c,lit,size);}
+function applyTheme(){
+  document.body.classList.toggle('dino',S.theme==='dino');
+  $('brand').textContent=T().brand;
+  $('themeBtn').textContent=T().switchLabel;
+  $('repairLabel').textContent=T().repair;
+  $('speedLabel').textContent=T().speed;
+  $('startBtn').textContent='开始'+T().build;
+}
 
 function load(){try{const j=localStorage.getItem(KEY);if(j)S=Object.assign(S,JSON.parse(j));}catch(e){}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -288,6 +329,33 @@ function robotSVG(r,lit,size){
   </svg>`;
 }
 
+function dinoSVG(r,lit,size){
+  const dark='#1c2e22',ds='#3d6a4a';
+  const on=i=>i<lit;
+  const f=i=>on(i)?r.color:dark, s=i=>on(i)?'#ffffff':ds;
+  const eye=on(5)?'#ffffff':ds, pupil=on(5)?'#0e1a12':ds;
+  const glow=on(8)?`<circle cx="86" cy="84" r="22" fill="${r.color}" opacity=".25"/>`:'';
+  const spikes=[58,72,86,100].map(x=>`<polygon points="${x},62 ${x+7},46 ${x+14},62" fill="${f(6)}" stroke="${s(6)}" stroke-width="2" stroke-linejoin="round"/>`).join('');
+  return `<svg viewBox="0 0 160 130" width="${size}" height="${Math.round(size*0.81)}" role="img" aria-label="${r.name}">
+  <polygon points="112,70 158,42 152,64 116,92" fill="${f(0)}" stroke="${s(0)}" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="96" y="92" width="16" height="30" rx="6" fill="${f(1)}" stroke="${s(1)}" stroke-width="2"/>
+  <rect x="92" y="114" width="26" height="10" rx="4" fill="${f(1)}" stroke="${s(1)}" stroke-width="2"/>
+  <rect x="62" y="94" width="14" height="26" rx="6" fill="${f(2)}" stroke="${s(2)}" stroke-width="2"/>
+  <rect x="58" y="112" width="24" height="10" rx="4" fill="${f(2)}" stroke="${s(2)}" stroke-width="2"/>
+  <ellipse cx="86" cy="82" rx="38" ry="24" fill="${f(3)}" stroke="${s(3)}" stroke-width="2"/>
+  ${spikes}
+  <polygon points="44,50 64,54 76,80 54,86" fill="${f(4)}" stroke="${s(4)}" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="14" y="36" width="48" height="26" rx="11" fill="${f(5)}" stroke="${s(5)}" stroke-width="2"/>
+  <path d="M18 54 L58 54" stroke="${on(5)?'#0e1a12':ds}" stroke-width="2"/>
+  <polygon points="22,54 26,60 30,54 34,60 38,54" fill="${on(5)?'#ffffff':'none'}" stroke="none"/>
+  <circle cx="30" cy="45" r="4" fill="${eye}"/><circle cx="31" cy="45" r="2" fill="${pupil}"/>
+  <polygon points="32,36 38,22 46,36" fill="${f(7)}" stroke="${s(7)}" stroke-width="2" stroke-linejoin="round"/>
+  ${glow}
+  <circle cx="86" cy="84" r="14" fill="${on(8)?'#ffffff':'#132018'}" stroke="${f(8)}" stroke-width="4"/>
+  <text x="86" y="91" text-anchor="middle" font-family="Bungee,Arial Black,sans-serif" font-size="18" fill="${on(8)?r.color:ds}">${r.n}</text>
+  </svg>`;
+}
+
 /* ---------- 界面 ---------- */
 const screens=['home','learn','quiz','result'];
 function show(id){screens.forEach(s=>{$(s).hidden=(s!==id);});window.scrollTo(0,0);}
@@ -306,12 +374,12 @@ function renderHome(){
   renderEnergy();
   const g=$('robotGrid');g.innerHTML='';
   let nextMarked=false;
-  ROBOTS.forEach(r=>{
+  CR().forEach(r=>{
     const st=S.stars[r.n]||0, un=isUnlocked(r.n);
     const b=document.createElement('button');
     b.className='rcard'+(un?'':' locked');
     if(un&&st===0&&!nextMarked){b.classList.add('next');nextMarked=true;}
-    b.innerHTML=robotSVG(r,un?(st?9:0):0,72)+`<div class="nm">${r.name}</div><div class="rw">${CN[r.n]}的口诀</div><div class="st">${st?starStr(st):(un?'待组装':'未解锁')}</div>`;
+    b.innerHTML=drawCreature(r,un?(st?9:0):0,72)+`<div class="nm">${r.name}</div><div class="rw">${CN[r.n]}的口诀</div><div class="st">${st?starStr(st):(un?T().pending:'未解锁')}</div>`;
     b.disabled=!un;
     b.addEventListener('click',()=>{sndTap();openLearn(r.n);});
     g.appendChild(b);
@@ -320,19 +388,20 @@ function renderHome(){
   $('repairCount').hidden=w===0;$('repairCount').textContent=w;
   $('repairBtn').disabled=w===0;
   $('speedBtn').disabled=unlockedRows().length<2;
-  const done=ROBOTS.filter(r=>(S.stars[r.n]||0)>0).length;
+  const done=CR().filter(r=>(S.stars[r.n]||0)>0).length;
   const total=Object.values(S.stars).reduce((a,b)=>a+b,0);
-  $('homeStat').textContent=`已组装 ${done}/9 个机器人 · 共 ${total} 颗星`+(S.best?` · 极速挑战最高 ${S.best} 分`:'')+(w?` · 修理厂里有 ${w} 道题等着你`:'');
-  $('homeHint').textContent= done===9?'全部机器人组装完成！去极速挑战里刷新纪录吧。':(w>=5?'修理厂堆了不少零件，先去修一修吧！':'点一个亮着的机器人，答对题目就能把它组装起来！');
+  $('homeStat').textContent=`已${T().build} ${done}/9 个${T().unit} · 共 ${total} 颗星`+(S.best?` · ${T().speed}最高 ${S.best} 分`:'')+(w?` · ${T().repair}里有 ${w} 道题等着你`:'');
+  $('homeHint').textContent= done===9?T().hintAll:(w>=5?T().hintRepair:T().hintNew);
   $('soundBtn').textContent='声音：'+(S.sound?'开':'关');
 }
 
 /* ---------- 学一学 ---------- */
 let curRow=1;
 function openLearn(n){
-  curRow=n;const r=ROBOTS[n-1];
-  $('ltitle').innerHTML=`${r.name}号<small>${CN[n]}的口诀</small>`;
-  $('learnRobot').innerHTML=robotSVG(r,(S.stars[n]||0)?9:0,96);
+  curRow=n;const r=CR()[n-1];
+  $('ltitle').innerHTML=`${r.name}<small>${CN[n]}的口诀</small>`;
+  $('learnHint').textContent=T().learnHint;
+  $('learnRobot').innerHTML=drawCreature(r,(S.stars[n]||0)?9:0,S.theme==='dino'?120:96);
   const kl=$('klist');kl.innerHTML='';
   rowQs(n).forEach(q=>{
     const b=document.createElement('button');b.className='krow';
@@ -381,8 +450,8 @@ function renderProg(){
 function renderQuizRobot(){
   const box=$('quizRobot');
   if(Q.mode==='speed'){box.innerHTML=`<div class="score">${Q.score}<small>得分</small></div>`;return;}
-  const r=ROBOTS[(Q.mode==='row'?Q.row:Q.cur?Q.cur.b:1)-1];
-  box.innerHTML=robotSVG(r,Q.mode==='row'?Q.lit:9,120);
+  const r=CR()[(Q.mode==='row'?Q.row:Q.cur?Q.cur.b:1)-1];
+  box.innerHTML=drawCreature(r,Q.mode==='row'?Q.lit:9,120);
 }
 function next(){
   if(Q.mode==='speed'){Q.cur=randomQ();}
@@ -421,7 +490,7 @@ function answer(v,btn){
     setTimeout(next,ok&&Q.mode==='speed'?700:1100);
   }else{
     btn.classList.add('bad');sndBad();
-    $('feedback').innerHTML=`${q.p}，${q.kj}<small>再记一记，等一下还会问哦</small>`;$('feedback').className='fb bad';
+    $('feedback').innerHTML=`${q.p}，${q.kj}<small>${T().wrongHint}</small>`;$('feedback').className='fb bad';
     say(q.kj);
     Q.wrongs++;Q.askedWrong[q.key]=true;
     S.wrong[q.key]=Math.min(3,(S.wrong[q.key]||0)+1);
@@ -436,22 +505,22 @@ function finish(){
   const rw=$('rwrap');rw.querySelectorAll('.conf').forEach(e=>e.remove());
   $('nextBtn').hidden=true;$('rchips').innerHTML='';
   if(Q.mode==='row'){
-    const r=ROBOTS[Q.row-1];
+    const r=CR()[Q.row-1];
     const stars=Q.wrongs===0?3:Q.wrongs<=2?2:1;
     S.stars[Q.row]=Math.max(S.stars[Q.row]||0,stars);save();
-    $('resultRobot').innerHTML=robotSVG(r,9,150);$('resultRobot').className='robot done';
-    $('rtitle').textContent=`${r.name}号 组装完成！`;
+    $('resultRobot').innerHTML=drawCreature(r,9,S.theme==='dino'?200:150);$('resultRobot').className='robot done';
+    $('rtitle').textContent=`${r.name} ${T().done}`;
     $('rstars').innerHTML=starStr(stars);
     $('rmsg').textContent=Q.wrongs===0?'一题都没错，太厉害了！':`错了 ${Q.wrongs} 次，再练一遍就能拿三颗星。`;
     if(Q.row<9)$('nextBtn').hidden=false;
     sndWin();confetti(r.color);
-    setTimeout(()=>say(`${r.name}号组装完成`),300);
+    setTimeout(()=>say(`${r.name}${T().done}`),300);
   }else if(Q.mode==='repair'){
     const left=wrongList().length;
-    $('resultRobot').innerHTML=robotSVG(ROBOTS[7],9,120);$('resultRobot').className='robot done';
-    $('rtitle').textContent='修理完成！';
+    $('resultRobot').innerHTML=drawCreature(CR()[7],9,S.theme==='dino'?160:120);$('resultRobot').className='robot done';
+    $('rtitle').textContent=T().repairDone;
     $('rstars').innerHTML=starStr(Q.wrongs===0?3:Q.wrongs<=2?2:1);
-    $('rmsg').textContent=left?`修理厂里还剩 ${left} 道题，明天再来修一修。`:'修理厂空啦，所有零件都修好了！';
+    $('rmsg').textContent=left?T().repairLeft.replace('{n}',left):T().repairEmpty;
     sndWin();
   }else{
     const isBest=Q.score>(S.best||0);
@@ -459,7 +528,7 @@ function finish(){
     $('resultRobot').innerHTML=`<div class="score">${Q.score}<small>60秒答对</small></div>`;$('resultRobot').className='robot';
     $('rtitle').textContent=isBest&&Q.score>0?'新纪录！':'时间到！';
     $('rstars').innerHTML=starStr(Q.score>=20?3:Q.score>=12?2:Q.score>=5?1:0);
-    $('rmsg').textContent=`最高纪录 ${S.best} 分`+(Q.wrongs?`，这次错了 ${Q.wrongs} 题，已送进修理厂。`:'。');
+    $('rmsg').textContent=`最高纪录 ${S.best} 分`+(Q.wrongs?`，这次错了 ${Q.wrongs} 题，已送进${T().repair}。`:'。');
     sndWin();if(isBest&&Q.score>0)confetti('#ffd23f');
   }
   const wk=Object.keys(Q.askedWrong);
@@ -486,8 +555,9 @@ $('speedBtn').addEventListener('click',()=>{sndTap();startQuiz('speed');});
 $('againBtn').addEventListener('click',()=>{sndTap();if(Q.mode==='row')openLearn(Q.row);else startQuiz(Q.mode);});
 $('nextBtn').addEventListener('click',()=>{sndTap();openLearn(Q.row+1);});
 $('soundBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('soundBtn').textContent='声音：'+(S.sound?'开':'关');if(S.sound)sndTap();});
-$('resetBtn').addEventListener('click',()=>{if(confirm('确定清空全部进度吗？星星、错题和纪录都会归零。')){S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:S.sound};save();renderHome();}});
+$('themeBtn').addEventListener('click',()=>{S.theme=S.theme==='dino'?'robot':'dino';save();sndTap();applyTheme();renderHome();if(!$('home').hidden)show('home');else{renderHome();show('home');}});
+$('resetBtn').addEventListener('click',()=>{if(confirm('确定清空全部进度吗？星星、错题和纪录都会归零。')){S={stars:{},wrong:{},daily:{date:'',n:0},best:0,sound:S.sound,theme:S.theme};save();renderHome();}});
 
-load();ensureDaily();renderHome();show('home');
+load();ensureDaily();applyTheme();renderHome();show('home');
 })();
 </script>
