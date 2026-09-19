@@ -1,0 +1,126 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>发音试听</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Bungee&display=swap">
+<style>
+:root{--bg:#0f1526;--panel:#1b2540;--panel2:#243256;--line:#35477a;--text:#f2f6ff;--muted:#93a4cc;--energy:#3ee0ff;--star:#ffd23f;--orange:#ff8a3d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'ZCOOL KuaiLe','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;font-size:18px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+.app{max-width:640px;margin:0 auto;padding:16px 16px 40px;display:flex;flex-direction:column;gap:22px}
+h1{font-size:24px;margin:0;color:var(--energy)}
+h2{font-size:20px;margin:0 0 4px}
+p{margin:0;color:var(--muted);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.cell{display:flex;gap:4px}
+.cell button{flex:1;padding:10px 4px;border-radius:14px;border:2px solid var(--line);background:var(--panel2);color:var(--text);font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 5px 0 #121a31;transition:transform .1s,box-shadow .1s}
+.cell button:active{transform:translateY(4px);box-shadow:0 1px 0 #121a31}
+.cell button b{font-family:'Bungee','Arial Black',sans-serif;font-size:22px;font-weight:400}
+.cell button span{font-size:12px;color:var(--muted)}
+.cell .play{border-color:var(--energy)}
+.cell .tts{opacity:.85}
+.cell button.on{background:var(--star);color:#1a0d00}
+.cell button.on span{color:#5a4000}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px;color:var(--muted)}
+.note b{color:var(--text)}
+ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}
+a{color:var(--energy)}
+</style>
+<div class="app">
+  <h1>发音试听</h1>
+  <p>每组左边是<b style="color:var(--energy)">音库真人录音</b>，右边是 <b>iPad 自带语音</b>。点一点，比一比，哪个好告诉我。</p>
+
+  <section>
+    <h2>拼音</h2>
+    <p>声母 b p m f、单韵母 a o e、ma 的四个声调。iPad 语音用的是"念一个汉字"的办法。</p>
+    <div class="grid"><div class="cell"><button class="play" data-src="audio/pinyin/bo1.mp3"><b>b</b><span>音库</span></button><button class="tts" data-say="玻" data-lang="zh-CN"><b>b</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/po1.mp3"><b>p</b><span>音库</span></button><button class="tts" data-say="坡" data-lang="zh-CN"><b>p</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/mo1.mp3"><b>m</b><span>音库</span></button><button class="tts" data-say="摸" data-lang="zh-CN"><b>m</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/fo1.mp3"><b>f</b><span>音库</span></button><button class="tts" data-say="佛" data-lang="zh-CN"><b>f</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/a1.mp3"><b>a</b><span>音库</span></button><button class="tts" data-say="啊" data-lang="zh-CN"><b>a</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/o1.mp3"><b>o</b><span>音库</span></button><button class="tts" data-say="喔" data-lang="zh-CN"><b>o</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/e1.mp3"><b>e</b><span>音库</span></button><button class="tts" data-say="鹅" data-lang="zh-CN"><b>e</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/ma1.mp3"><b>mā</b><span>音库</span></button><button class="tts" data-say="妈" data-lang="zh-CN"><b>mā</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/ma2.mp3"><b>má</b><span>音库</span></button><button class="tts" data-say="麻" data-lang="zh-CN"><b>má</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/ma3.mp3"><b>mǎ</b><span>音库</span></button><button class="tts" data-say="马" data-lang="zh-CN"><b>mǎ</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/pinyin/ma4.mp3"><b>mà</b><span>音库</span></button><button class="tts" data-say="骂" data-lang="zh-CN"><b>mà</b><span>iPad语音</span></button></div></div>
+  </section>
+
+  <section>
+    <h2>Phonics 字母音</h2>
+    <p>音库是维基共享的音标录音，一般先单独发音，再放在两个 a 中间读一次。iPad 语音用的是近似拼写。</p>
+    <div class="grid"><div class="cell"><button class="play" data-src="audio/phonics/m.m4a"><b>m</b><span>音库</span></button><button class="tts" data-say="mmm" data-lang="en-US"><b>m</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/s.m4a"><b>s</b><span>音库</span></button><button class="tts" data-say="sss" data-lang="en-US"><b>s</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/t.m4a"><b>t</b><span>音库</span></button><button class="tts" data-say="t" data-lang="en-US"><b>t</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/a.m4a"><b>a</b><span>音库</span></button><button class="tts" data-say="a" data-lang="en-US"><b>a</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/p.m4a"><b>p</b><span>音库</span></button><button class="tts" data-say="p" data-lang="en-US"><b>p</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/n.m4a"><b>n</b><span>音库</span></button><button class="tts" data-say="nnn" data-lang="en-US"><b>n</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/c.m4a"><b>c</b><span>音库</span></button><button class="tts" data-say="k" data-lang="en-US"><b>c</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/d.m4a"><b>d</b><span>音库</span></button><button class="tts" data-say="d" data-lang="en-US"><b>d</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/g.m4a"><b>g</b><span>音库</span></button><button class="tts" data-say="g" data-lang="en-US"><b>g</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/i.m4a"><b>i</b><span>音库</span></button><button class="tts" data-say="i" data-lang="en-US"><b>i</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/e.m4a"><b>e</b><span>音库</span></button><button class="tts" data-say="e" data-lang="en-US"><b>e</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/phonics/o.m4a"><b>o</b><span>音库</span></button><button class="tts" data-say="o" data-lang="en-US"><b>o</b><span>iPad语音</span></button></div></div>
+  </section>
+
+  <section>
+    <h2>Phonics 单词</h2>
+    <p>音库是维基共享的美音真人录音。</p>
+    <div class="grid"><div class="cell"><button class="play" data-src="audio/words/cat.m4a"><b>cat</b><span>音库</span></button><button class="tts" data-say="cat" data-lang="en-US"><b>cat</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/dog.m4a"><b>dog</b><span>音库</span></button><button class="tts" data-say="dog" data-lang="en-US"><b>dog</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/sun.m4a"><b>sun</b><span>音库</span></button><button class="tts" data-say="sun" data-lang="en-US"><b>sun</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/map.m4a"><b>map</b><span>音库</span></button><button class="tts" data-say="map" data-lang="en-US"><b>map</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/pig.m4a"><b>pig</b><span>音库</span></button><button class="tts" data-say="pig" data-lang="en-US"><b>pig</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/hat.m4a"><b>hat</b><span>音库</span></button><button class="tts" data-say="hat" data-lang="en-US"><b>hat</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/bed.m4a"><b>bed</b><span>音库</span></button><button class="tts" data-say="bed" data-lang="en-US"><b>bed</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/cup.m4a"><b>cup</b><span>音库</span></button><button class="tts" data-say="cup" data-lang="en-US"><b>cup</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/fish.m4a"><b>fish</b><span>音库</span></button><button class="tts" data-say="fish" data-lang="en-US"><b>fish</b><span>iPad语音</span></button></div>
+<div class="cell"><button class="play" data-src="audio/words/ship.m4a"><b>ship</b><span>音库</span></button><button class="tts" data-say="ship" data-lang="en-US"><b>ship</b><span>iPad语音</span></button></div></div>
+  </section>
+
+  <div class="note"><b>音频来源</b><br>
+  拼音：<a href="https://github.com/davinfifield/mp3-chinese-pinyin-sound">mp3-chinese-pinyin-sound</a>，公有领域。<br>
+  Phonics 与单词：Wikimedia Commons，按 CC BY-SA 3.0 使用：
+  <ul><li><a href="https://commons.wikimedia.org/wiki/File:Bilabial_nasal.ogg">Bilabial nasal.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiceless_alveolar_sibilant.ogg">Voiceless alveolar sibilant.ogg</a> — Peter Isotalo — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiceless_alveolar_plosive.ogg">Voiceless alveolar plosive.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Near-open_front_unrounded_vowel.ogg">Near-open front unrounded vowel.ogg</a> — No machine-readable author provided. Denelson83 assumed (based on copyright claims). — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiceless_bilabial_plosive.ogg">Voiceless bilabial plosive.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Alveolar_nasal.ogg">Alveolar nasal.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiceless_velar_plosive.ogg">Voiceless velar plosive.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiced_alveolar_plosive.ogg">Voiced alveolar plosive.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Voiced_velar_plosive.ogg">Voiced velar plosive.ogg</a> — 作者见文件页 — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Near-close_near-front_unrounded_vowel.ogg">Near-close near-front unrounded vowel.ogg</a> — No machine-readable author provided. Denelson83 assumed (based on copyright claims). — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Open-mid_front_unrounded_vowel.ogg">Open-mid front unrounded vowel.ogg</a> — No machine-readable author provided. Denelson83 assumed (based on copyright claims). — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:Open_back_unrounded_vowel.ogg">Open back unrounded vowel.ogg</a> — No machine-readable author provided. Denelson83 assumed (based on copyright claims). — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-cat.ogg">En-us-cat.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-dog.ogg">En-us-dog.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-sun.ogg">En-us-sun.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-map.ogg">En-us-map.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-pig.ogg">En-us-pig.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-hat.ogg">En-us-hat.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-bed.ogg">En-us-bed.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-cup.ogg">En-us-cup.ogg</a> — Dvortygirl — CC BY-SA 3.0</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-fish.ogg">En-us-fish.ogg</a> — 作者见文件页 — Public domain</li>
+<li><a href="https://commons.wikimedia.org/wiki/File:En-us-ship.ogg">En-us-ship.ogg</a> — Dvortygirl — CC BY-SA 3.0</li></ul></div>
+</div>
+<script>
+(function(){
+  let cur=null;
+  document.querySelectorAll('.play').forEach(b=>b.addEventListener('click',()=>{
+    if(cur){cur.pause();}
+    cur=new Audio(b.dataset.src);
+    document.querySelectorAll('.on').forEach(e=>e.classList.remove('on'));b.classList.add('on');
+    cur.onended=()=>b.classList.remove('on');
+    cur.play().catch(()=>{b.querySelector('span').textContent='播放失败';});
+  }));
+  document.querySelectorAll('.tts').forEach(b=>b.addEventListener('click',()=>{
+    try{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(b.dataset.say);u.lang=b.dataset.lang;u.rate=0.8;
+      document.querySelectorAll('.on').forEach(e=>e.classList.remove('on'));b.classList.add('on');
+      u.onend=()=>b.classList.remove('on');
+      speechSynthesis.speak(u);
+    }catch(e){b.querySelector('span').textContent='不支持';}
+  }));
+})();
+</script>
