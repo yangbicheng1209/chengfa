@@ -1,0 +1,259 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>鲸鱼战队</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Bungee&display=swap">
+<style>
+:root{--bg:#04263f;--panel:#0a3a5c;--panel2:#0f4d78;--line:#1f6f9e;--text:#f2f8ff;--muted:#9cc6e0;--accent:#3ee0ff;--star:#ffd23f;--ok:#3ddc84;--bad:#ff5468;--btn:#ff8a3d;--btnshadow:#b95a1c;--shadow:#031a2c;
+--num:'Bungee','Arial Black','Helvetica Neue',sans-serif;--cn:'ZCOOL KuaiLe','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--cn);font-size:18px;line-height:1.35;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;
+background-image:linear-gradient(180deg,#0b4a75 0,#04263f 40%,#02172a 100%)}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{max-width:560px;margin:0 auto;min-height:100%;padding:12px 16px 28px;display:flex;flex-direction:column;gap:12px}
+.screen[hidden]{display:none}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-size:22px;letter-spacing:1px;color:var(--accent);text-shadow:0 0 12px rgba(62,224,255,.5)}
+.brand a{color:inherit;text-decoration:none}
+.energy{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:14px;color:var(--muted)}
+.bar{width:90px;height:12px;border-radius:8px;background:#021627;border:1px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);box-shadow:0 0 8px var(--accent);transition:width .4s}
+.energy b{font-family:var(--num);font-size:12px;color:var(--text)}
+.icon{padding:6px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:15px}
+.hint{margin:0;color:var(--muted);font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lcard{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px 8px;border-radius:16px;background:var(--panel);border:2px solid var(--line);transition:transform .15s}
+.lcard:active{transform:scale(.96)}.lcard.locked{opacity:.45;filter:grayscale(.6)}
+.lcard svg{width:72px;height:auto}
+.lcard .nm{font-size:16px}.lcard .rw{font-size:13px;color:var(--muted)}
+.lcard .st{font-size:14px;letter-spacing:1px;color:var(--star);min-height:20px}
+.lcard.next{border-color:var(--accent);box-shadow:0 0 0 3px rgba(62,224,255,.25),0 0 18px rgba(62,224,255,.35)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.big{flex:1;min-width:140px;width:100%;padding:14px 12px;border-radius:14px;font-size:20px;background:var(--btn);color:#1a0d00;box-shadow:0 5px 0 var(--btnshadow);transition:transform .1s,box-shadow .1s}
+.big:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btnshadow)}
+.big.alt{background:var(--panel2);color:var(--text);box-shadow:0 5px 0 var(--shadow);border:1px solid var(--line)}
+.big.alt:active{box-shadow:0 1px 0 var(--shadow)}.big[disabled]{opacity:.45;pointer-events:none}
+.badge{display:inline-block;min-width:26px;padding:1px 8px;border-radius:12px;background:var(--bad);color:#fff;font-family:var(--num);font-size:13px;vertical-align:middle}
+.stat{color:var(--muted);font-size:14px;margin:0}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.foot button{color:var(--muted);text-decoration:underline;font-size:13px}
+/* stage */
+.stage{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,#8fd8ff 0,#4fb3ee 18%,#1b7fc0 19%,#0d5a94 60%,#063a63 100%);aspect-ratio:16/10;max-height:46vh}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.hp{position:absolute;top:8px;right:10px;display:flex;gap:3px;align-items:center;font-size:13px;color:#fff;text-shadow:0 1px 2px #000}
+.hp i{width:12px;height:12px;border-radius:3px;background:#ff5468;box-shadow:0 0 4px #ff5468;display:inline-block}
+.hp i.off{background:#3a1a22;box-shadow:none}
+.msg{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:18px;color:#fff;text-shadow:0 1px 3px #000;pointer-events:none}
+.whale{transition:transform .5s ease}
+.whale.idle{animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.flash{animation:flash .5s}
+@keyframes flash{0%{filter:brightness(1)}30%{filter:brightness(4)}100%{filter:brightness(1)}}
+.boss.hit{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(4px,-2px)}}
+.boss.dead{animation:sink 2s forwards}
+@keyframes sink{to{transform:translateY(120px) rotate(25deg);opacity:0}}
+.bolt{animation:bolt .6s ease-in forwards}
+@keyframes bolt{to{opacity:0}}
+/* quiz */
+.qrow{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.q{font-family:var(--num);font-size:40px;line-height:1.1;letter-spacing:1px;flex:1;text-align:center}
+.q .qm{color:var(--accent)}
+.fb{font-size:20px;color:var(--star);min-width:90px;text-align:center;line-height:1.2}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.fb small{display:block;font-size:13px;color:var(--muted)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ch{padding:16px 10px;border-radius:16px;background:var(--panel2);border:2px solid var(--line);font-family:var(--num);font-size:34px;box-shadow:0 6px 0 var(--shadow);transition:transform .1s,box-shadow .1s,background .2s}
+.ch:active{transform:translateY(5px);box-shadow:0 1px 0 var(--shadow)}
+.ch.ok{background:var(--ok);border-color:var(--ok);color:#052a15;box-shadow:0 6px 0 #1f8f55}
+.ch.bad{background:var(--bad);border-color:var(--bad);color:#fff;box-shadow:0 6px 0 #a6202f;animation:shake .4s}
+.ch.dim{opacity:.35}.ch[disabled]{pointer-events:none}
+.prog{display:flex;gap:4px}.prog i{flex:1;height:8px;border-radius:4px;background:#021627;border:1px solid var(--line)}
+.prog i.on{background:var(--ok);border-color:var(--ok);box-shadow:0 0 6px var(--ok)}
+.qtop{display:flex;align-items:center;gap:10px}.qtop .prog{flex:1}
+/* result */
+.rwrap{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px 12px;border-radius:18px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.rt{font-size:28px;margin:0}
+.stars{font-size:40px;letter-spacing:6px;color:var(--star);text-shadow:0 0 14px rgba(255,210,63,.6)}.stars .off{color:#0a2e48;text-shadow:none}
+.rmsg{color:var(--muted);font-size:16px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{padding:4px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:15px}
+.chip b{font-family:var(--num);font-size:12px;color:var(--btn);margin-right:4px}
+.conf{position:absolute;top:-10px;width:8px;height:14px;border-radius:2px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(420px) rotate(540deg);opacity:0}}
+.pop{animation:pop .35s}@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@media (max-width:400px){.q{font-size:32px}.ch{font-size:28px;padding:14px 8px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<div class="app">
+  <header class="top">
+    <div class="brand"><a href="./">鲸鱼战队</a></div>
+    <div class="energy"><span>今日能量</span><div class="bar"><i id="energyFill"></i></div><b id="energyText">0/20</b></div>
+    <button id="soundBtn" class="icon" aria-label="声音开关">声音：开</button>
+  </header>
+  <section id="home" class="screen">
+    <p class="hint">海里的坏蛋来了！答对一题，就有一只鲸鱼变身成机器人去打它。</p>
+    <div class="grid" id="levels"></div>
+    <div class="actions"><button id="repairBtn" class="big alt">错题海湾 <span id="repairCount" class="badge" hidden>0</span></button><a class="big alt" href="./" style="text-align:center;text-decoration:none">回学习基地</a></div>
+    <p class="stat" id="homeStat"></p>
+    <div class="foot"><span>家长：进度保存在这台设备的浏览器里</span><button id="resetBtn">清空进度</button></div>
+  </section>
+  <section id="quiz" class="screen" hidden>
+    <div class="qtop"><button class="icon backBtn">← 返回</button><div class="prog" id="prog"></div></div>
+    <div class="stage" id="stage"><svg id="sea" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"></svg><div class="hp" id="hp"></div><div class="msg" id="msg"></div></div>
+    <div class="qrow"><div class="q" id="qtext"></div><div class="fb" id="feedback"></div></div>
+    <div class="choices" id="choices"></div>
+  </section>
+  <section id="result" class="screen" hidden>
+    <div class="rwrap" id="rwrap"><div id="rbig"></div><h2 class="rt" id="rtitle"></h2><div class="stars" id="rstars"></div><p class="rmsg" id="rmsg"></p><div class="chips" id="rchips"></div></div>
+    <div class="actions"><button class="big alt backBtn">返回</button><button class="big" id="againBtn">再打一次</button><button class="big" id="nextBtn" hidden>下一个坏蛋</button></div>
+  </section>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const KEY='mult-ocean-v1',DAILY_GOAL=20;
+const CN='零一二三四五六七八九'.split('');
+const BOSSES=[
+ {n:1,name:'小黑鲨',color:'#4a4a5a',hp:9},{n:2,name:'电鳗王',color:'#6a4aa0',hp:9},{n:3,name:'机械章鱼',color:'#a03a6a',hp:9},
+ {n:4,name:'铁甲螃蟹',color:'#b8462e',hp:9},{n:5,name:'毒刺水母',color:'#2a8a8a',hp:9},{n:6,name:'黑潮海怪',color:'#2f4f2f',hp:9},
+ {n:7,name:'钢牙鲸鲨',color:'#3a3a3a',hp:9},{n:8,name:'幽灵潜艇',color:'#40506a',hp:9},{n:9,name:'深渊霸主',color:'#5a1a1a',hp:9}];
+const WHALE_COLORS=['#5ec8ff','#7ad6ff','#4fb6f0','#8fd0ff','#63c0f5','#3fa8e8','#79cdf8','#56b8f2','#6ac3f7'];
+let S={stars:{},wrong:{},daily:{date:'',n:0},sound:true};
+function load(){try{const j=localStorage.getItem(KEY);if(j)S=Object.assign(S,JSON.parse(j));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function today(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function ensureDaily(){if(S.daily.date!==today())S.daily={date:today(),n:0};}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+/* 口诀 */
+function prodCN(p){if(p<10)return '得'+CN[p];if(p===10)return '一十';const t=Math.floor(p/10),o=p%10;return (t===1?'十':CN[t]+'十')+(o?CN[o]:'');}
+function kouju(a,b){const x=Math.min(a,b),y=Math.max(a,b);return CN[x]+CN[y]+prodCN(x*y);}
+function makeQ(a,b){const x=Math.min(a,b),y=Math.max(a,b);return {a:x,b:y,p:x*y,key:x+'x'+y,kj:kouju(x,y)};}
+function rowQs(n){const qs=[];for(let k=1;k<=9;k++)qs.push(makeQ(k,n));return qs;}
+function choicesFor(q){const c=new Set();[q.p+1,q.p-1,q.p+2,q.p-2,q.a*(q.b+1),q.a*(q.b-1),(q.a+1)*q.b,(q.a-1)*q.b,q.p+10,q.p-10,q.p+q.a,q.p-q.a,q.a+q.b].forEach(v=>{if(v>0&&v!==q.p&&v<=90)c.add(v);});const arr=shuffle([...c]).slice(0,3);while(arr.length<3){const v=Math.floor(Math.random()*81)+1;if(v!==q.p&&!arr.includes(v))arr.push(v);}return shuffle([q.p,...arr]);}
+/* 声音 */
+let ctx=null;
+function tone(f,d,t,v,dl){if(!S.sound)return;try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.type=t||'square';o.frequency.value=f;o.connect(g);g.connect(ctx.destination);const s=ctx.currentTime+(dl||0);g.gain.setValueAtTime(0.0001,s);g.gain.exponentialRampToValueAtTime(v||0.12,s+0.01);g.gain.exponentialRampToValueAtTime(0.0001,s+d);o.start(s);o.stop(s+d+0.02);}catch(e){}}
+const sndOk=()=>{tone(660,0.12);tone(880,0.14,'square',0.12,0.1);tone(1320,0.2,'square',0.1,0.2);};
+const sndBad=()=>{tone(200,0.25,'sawtooth');tone(150,0.3,'sawtooth',0.1,0.15);};
+const sndTap=()=>tone(520,0.06,'triangle',0.08);
+const sndTransform=()=>{[300,500,800,1200].forEach((f,i)=>tone(f,0.12,'sawtooth',0.1,i*0.07));};
+const sndHit=()=>{tone(120,0.25,'square',0.15);tone(80,0.3,'sawtooth',0.12,0.05);};
+const sndWin=()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,0.25,'square',0.12,i*0.12));
+function say(t){if(!S.sound)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=0.85;u.pitch=1.1;speechSynthesis.speak(u);}catch(e){}}
+/* 绘图 */
+function whaleSVG(color,size){return `<svg viewBox="0 0 110 60" width="${size}" height="${Math.round(size*0.55)}">${whaleBody(color)}</svg>`;}
+function whaleBody(color){return `<path d="M8 32 C6 18 30 10 60 12 C82 14 98 22 104 32 C98 40 82 48 60 50 C30 52 6 46 8 32 Z" fill="${color}"/><path d="M14 26 C30 24 60 22 96 30 C84 44 40 46 14 40 Z" fill="#eaf7ff" opacity=".85"/><polygon points="12,32 0,20 4,32 0,44" fill="${color}"/><path d="M52 34 C56 40 66 42 70 36 C64 40 58 40 52 34 Z" fill="${color}" opacity=".8"/><circle cx="86" cy="29" r="3.2" fill="#0b2740"/><circle cx="87" cy="28" r="1" fill="#fff"/><path d="M64 14 q3 -9 8 -3 q-2 -5 2 -7" stroke="#bfefff" stroke-width="2" fill="none" opacity=".9"/>`;}
+function robotBody(color){return `<rect x="42" y="30" width="26" height="26" rx="5" fill="${color}" stroke="#fff" stroke-width="1.5"/><rect x="46" y="8" width="18" height="18" rx="4" fill="${color}" stroke="#fff" stroke-width="1.5"/><rect x="49" y="14" width="5" height="4" fill="#3ee0ff"/><rect x="56" y="14" width="5" height="4" fill="#3ee0ff"/><rect x="30" y="32" width="10" height="20" rx="4" fill="${color}" stroke="#fff" stroke-width="1.5"/><rect x="70" y="32" width="10" height="20" rx="4" fill="${color}" stroke="#fff" stroke-width="1.5"/><polygon points="20,20 30,34 30,46 18,44" fill="${color}" opacity=".9"/><polygon points="90,20 80,34 80,46 92,44" fill="${color}" opacity=".9"/><circle cx="55" cy="43" r="5" fill="#fff"/><circle cx="55" cy="43" r="3" fill="#3ee0ff"/>`;}
+function bossSVG(b,size){return `<svg viewBox="0 0 120 80" width="${size}" height="${Math.round(size*0.67)}">${bossBody(b)}</svg>`;}
+function bossBody(b){const c=b.color;return `<path d="M112 40 C100 18 60 10 30 26 C16 32 10 38 4 40 C10 42 16 48 30 54 C60 70 100 62 112 40 Z" fill="${c}" stroke="#111" stroke-width="2"/><polygon points="60,14 70,-2 78,16" fill="${c}" stroke="#111" stroke-width="2"/><polygon points="112,40 120,24 118,40 120,56" fill="${c}" stroke="#111" stroke-width="2"/><path d="M18 40 L34 40 L36 46 L40 40 L44 46 L48 40 L52 46 L56 40" stroke="#fff" stroke-width="3" fill="none"/><circle cx="34" cy="31" r="5" fill="#ff2a2a"/><circle cx="35" cy="30" r="2" fill="#fff"/><path d="M26 24 L40 28" stroke="#111" stroke-width="3"/>`;}
+function starStr(n){let s='';for(let i=1;i<=3;i++)s+=i<=n?'<span>★</span>':'<span class="off">★</span>';return s;}
+/* 界面 */
+const screens=['home','quiz','result'];
+function show(id){screens.forEach(s=>$(s).hidden=(s!==id));window.scrollTo(0,0);}
+function isUnlocked(n){return n===1||(S.stars[n-1]||0)>=1;}
+function wrongList(){return Object.keys(S.wrong).filter(k=>S.wrong[k]>0);}
+function renderEnergy(){ensureDaily();const n=Math.min(S.daily.n,DAILY_GOAL);$('energyFill').style.width=(n/DAILY_GOAL*100)+'%';$('energyText').textContent=n+'/'+DAILY_GOAL;}
+function renderHome(){
+  renderEnergy();const g=$('levels');g.innerHTML='';let nextMarked=false,done=0;
+  BOSSES.forEach(b=>{const st=S.stars[b.n]||0,un=isUnlocked(b.n);if(st)done++;
+    const el=document.createElement('button');el.className='lcard'+(un?'':' locked');if(un&&!st&&!nextMarked){el.classList.add('next');nextMarked=true;}
+    el.innerHTML=(st?whaleSVG(WHALE_COLORS[b.n-1],72):bossSVG(b,72))+`<div class="nm">${b.name}</div><div class="rw">${CN[b.n]}的口诀</div><div class="st">${st?starStr(st):(un?'待挑战':'未解锁')}</div>`;
+    el.disabled=!un;el.addEventListener('click',()=>{sndTap();startQuiz('row',b.n);});g.appendChild(el);});
+  const w=wrongList().length;$('repairCount').hidden=w===0;$('repairCount').textContent=w;$('repairBtn').disabled=w===0;
+  $('homeStat').textContent=`打败了 ${done}/9 个坏蛋 · 共 ${Object.values(S.stars).reduce((a,b)=>a+b,0)} 颗星`+(w?` · 错题海湾里有 ${w} 道题`:'');
+  $('soundBtn').textContent='声音：'+(S.sound?'开':'关');
+}
+/* 海洋舞台 */
+let W=[];// whales state
+function buildStage(boss,count){
+  const sea=$('sea');const c=boss?boss.color:'#4a4a5a';
+  let s=`<defs><linearGradient id="deep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b7fc0"/><stop offset="1" stop-color="#052c4a"/></linearGradient></defs>
+  <rect x="0" y="0" width="320" height="200" fill="url(#deep)"/>
+  <rect x="0" y="0" width="320" height="36" fill="#8fd8ff"/><ellipse cx="270" cy="14" rx="14" ry="12" fill="#ffe680"/>
+  <path id="wave1" d="M-40 36 Q0 26 40 36 T120 36 T200 36 T280 36 T360 36 V60 H-40 Z" fill="#4fb3ee"/>
+  <path d="M-40 44 Q0 36 40 44 T120 44 T200 44 T280 44 T360 44 V60 H-40 Z" fill="#2c94d6" opacity=".8"/>`;
+  for(let i=0;i<12;i++){s+=`<circle cx="${20+i*26}" cy="${70+(i%4)*30}" r="${1.5+(i%3)}" fill="#bfefff" opacity=".35"/>`;}
+  s+=`<path d="M0 200 Q40 170 80 200 Q120 175 160 200 Q200 172 240 200 Q280 178 320 200 Z" fill="#031a2c"/>`;
+  W=[];
+  const spots=[[14,70],[70,60],[126,72],[30,110],[86,102],[142,112],[44,148],[100,142],[156,150]];
+  for(let i=0;i<count;i++){const [x,y]=spots[i%spots.length];W.push({x,y,color:WHALE_COLORS[i%9],robot:false});
+    s+=`<g class="whale idle" id="w${i}" style="animation-delay:${(i*0.37)%3}s"><g transform="translate(${x} ${y}) scale(0.5)">${whaleBody(WHALE_COLORS[i%9])}</g></g>`;}
+  if(boss)s+=`<g class="boss" id="boss"><g transform="translate(200 80) scale(1.0)">${bossBody(boss)}</g></g>`;
+  sea.innerHTML=s;
+}
+function renderHP(hp,max){const h=$('hp');h.innerHTML=`<span>${Q.boss?Q.boss.name:''}</span>`+Array.from({length:max},(_,i)=>`<i class="${i<hp?'':'off'}"></i>`).join('');}
+function transformWhale(i,cb){
+  const g=$('w'+i);if(!g){cb&&cb();return;}const w=W[i];
+  g.classList.remove('idle');g.classList.add('flash');sndTransform();
+  setTimeout(()=>{g.innerHTML=`<g transform="translate(${w.x} ${w.y}) scale(0.5)">${robotBody(w.color)}</g>`;w.robot=true;g.classList.remove('flash');
+    // dash to boss
+    g.style.transition='transform .55s ease-in';g.style.transform=`translate(${200-w.x}px, ${80-w.y}px)`;
+    setTimeout(()=>{hitBoss();g.style.transition='transform .6s ease-out';g.style.transform='translate(0,0)';setTimeout(()=>{cb&&cb();},650);},600);
+  },450);
+}
+function hitBoss(){const b=$('boss');if(!b)return;sndHit();b.classList.remove('hit');void b.offsetWidth;b.classList.add('hit');
+  const sea=$('sea');const bolt=document.createElementNS('http://www.w3.org/2000/svg','g');bolt.setAttribute('class','bolt');bolt.innerHTML=`<polygon points="196,60 214,70 202,74 220,96 190,78 204,74" fill="#ffe680"/>`;sea.appendChild(bolt);setTimeout(()=>bolt.remove(),600);
+  Q.hp--;renderHP(Q.hp,Q.max);
+  if(Q.hp<=0){b.classList.add('dead');$('msg').textContent=Q.boss.name+' 被打跑啦！';}
+}
+/* 答题 */
+let Q={};
+function startQuiz(mode,row){
+  Q={mode,row,queue:[],lit:0,wrongs:0,busy:false,cur:null,askedWrong:{},boss:null,hp:0,max:0,next:0};
+  if(mode==='row'){Q.queue=shuffle(rowQs(row));Q.boss=BOSSES[row-1];}
+  else{Q.queue=shuffle(wrongList()).slice(0,9).map(k=>{const [a,b]=k.split('x').map(Number);return makeQ(a,b);});Q.boss={name:'错题小怪',color:'#556',hp:Q.queue.length};}
+  Q.max=Q.queue.length;Q.hp=Q.max;
+  buildStage(Q.boss,Q.max);renderHP(Q.hp,Q.max);$('msg').textContent=mode==='row'?`${Q.boss.name}来了！答对一题，就有一只鲸鱼变身！`:'把错过的题答对，鲸鱼就会出动！';
+  $('feedback').textContent='';$('feedback').className='fb';renderProg();show('quiz');next();
+}
+function renderProg(){const p=$('prog');p.innerHTML='';for(let i=0;i<Q.max;i++){const s=document.createElement('i');if(i<Q.lit)s.className='on';p.appendChild(s);}}
+function next(){
+  if(!Q.queue.length){finish();return;}
+  Q.cur=Q.queue.shift();Q.busy=false;const q=Q.cur;
+  $('qtext').innerHTML=`${q.a} × ${q.b} = <span class="qm">?</span>`;$('qtext').classList.remove('pop');void $('qtext').offsetWidth;$('qtext').classList.add('pop');
+  $('feedback').textContent='';$('feedback').className='fb';
+  const c=$('choices');c.innerHTML='';choicesFor(q).forEach(v=>{const b=document.createElement('button');b.className='ch';b.textContent=v;b.addEventListener('click',()=>answer(v,b));c.appendChild(b);});
+}
+function answer(v,btn){
+  if(Q.busy)return;Q.busy=true;const q=Q.cur,ok=v===q.p;
+  document.querySelectorAll('.ch').forEach(b=>{b.disabled=true;if(Number(b.textContent)===q.p)b.classList.add('ok');else if(b!==btn)b.classList.add('dim');});
+  ensureDaily();
+  if(ok){
+    sndOk();say(q.kj);$('feedback').innerHTML=q.kj;$('feedback').className='fb ok';
+    S.daily.n++;Q.lit++;if(!Q.askedWrong[q.key]&&S.wrong[q.key])S.wrong[q.key]=Math.max(0,S.wrong[q.key]-1);
+    save();renderProg();renderEnergy();$('msg').textContent='';
+    transformWhale(Q.next++,()=>setTimeout(next,300));
+  }else{
+    btn.classList.add('bad');sndBad();$('feedback').innerHTML=`${q.p}<small>${q.kj}</small>`;$('feedback').className='fb bad';say(q.kj);
+    Q.wrongs++;Q.askedWrong[q.key]=true;S.wrong[q.key]=Math.min(3,(S.wrong[q.key]||0)+1);
+    Q.queue.splice(Math.min(2,Q.queue.length),0,q);$('msg').textContent='坏蛋在笑！再想想，等一下还会问。';
+    const b=$('boss');if(b){b.classList.remove('hit');void b.offsetWidth;b.classList.add('hit');}
+    save();setTimeout(next,1900);
+  }
+}
+function finish(){
+  const rw=$('rwrap');rw.querySelectorAll('.conf').forEach(e=>e.remove());$('nextBtn').hidden=true;$('rchips').innerHTML='';
+  const stars=Q.wrongs===0?3:Q.wrongs<=2?2:1;
+  $('rbig').innerHTML=`<div style="display:flex;justify-content:center;gap:4px;flex-wrap:wrap;max-width:300px">${W.map(w=>`<svg viewBox="0 0 110 60" width="56" height="30">${robotBody(w.color)}</svg>`).join('')}</div>`;
+  if(Q.mode==='row'){S.stars[Q.row]=Math.max(S.stars[Q.row]||0,stars);save();
+    $('rtitle').textContent=`${Q.boss.name} 被打跑啦！`;$('rmsg').textContent=Q.wrongs===0?'鲸鱼战队全员出动，一题都没错！':`错了 ${Q.wrongs} 次，再打一次就能拿三颗星。`;
+    if(Q.row<9)$('nextBtn').hidden=false;setTimeout(()=>say(`${Q.boss.name}被打跑啦`),300);
+  }else{const left=wrongList().length;$('rtitle').textContent='错题海湾清理完毕！';$('rmsg').textContent=left?`还剩 ${left} 道题，明天再来。`:'错题海湾空啦！';}
+  $('rstars').innerHTML=starStr(stars);sndWin();confetti();
+  Object.keys(Q.askedWrong).forEach(k=>{const [a,b]=k.split('x').map(Number);const c=document.createElement('span');c.className='chip';c.innerHTML=`<b>${a}×${b}=${a*b}</b>${kouju(a,b)}`;$('rchips').appendChild(c);});
+  setTimeout(()=>{show('result');renderEnergy();},Q.mode==='row'?1600:300);
+}
+function confetti(){const rw=$('rwrap');const cols=['#3ee0ff','#ffd23f','#ffffff','#3ddc84'];for(let i=0;i<40;i++){const e=document.createElement('i');e.className='conf';e.style.left=Math.random()*100+'%';e.style.background=cols[i%4];e.style.animationDuration=(1.6+Math.random()*1.4)+'s';e.style.animationDelay=(Math.random()*.6)+'s';rw.appendChild(e);}}
+/* 事件 */
+document.querySelectorAll('.backBtn').forEach(b=>b.addEventListener('click',()=>{sndTap();renderHome();show('home');}));
+$('repairBtn').addEventListener('click',()=>{sndTap();startQuiz('repair');});
+$('againBtn').addEventListener('click',()=>{sndTap();startQuiz(Q.mode,Q.row);});
+$('nextBtn').addEventListener('click',()=>{sndTap();startQuiz('row',Q.row+1);});
+$('soundBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('soundBtn').textContent='声音：'+(S.sound?'开':'关');if(S.sound)sndTap();});
+$('resetBtn').addEventListener('click',()=>{if(confirm('确定清空这个游戏的全部进度吗？')){S={stars:{},wrong:{},daily:{date:'',n:0},sound:S.sound};save();renderHome();}});
+load();ensureDaily();renderHome();show('home');
+})();
+</script>

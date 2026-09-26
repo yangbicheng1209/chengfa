@@ -13,7 +13,7 @@
 .card .d{font-size:14px;color:var(--muted);margin-top:2px}
 .card .s{margin-left:auto;text-align:right;font-family:'Andika',sans-serif;font-size:14px;color:var(--star);white-space:nowrap}
 .card .s small{display:block;color:var(--muted);font-family:var(--cn)}
-.c1{background:linear-gradient(135deg,#1b2540,#243256)}.c2{background:linear-gradient(135deg,#173540,#1f4552)}.c3{background:linear-gradient(135deg,#261b45,#33255c)}
+.c1{background:linear-gradient(135deg,#1b2540,#243256)}.c4{background:linear-gradient(135deg,#0a3a5c,#0f4d78)}.c2{background:linear-gradient(135deg,#173540,#1f4552)}.c3{background:linear-gradient(135deg,#261b45,#33255c)}
 .total{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .total .bar{flex:1;width:auto;height:16px}
 .total b{font-family:'Andika',sans-serif;font-size:16px;color:var(--text)}
@@ -27,6 +27,7 @@
   <div class="cards">
     <a class="card c1" href="math.html"><div class="em">🤖</div><div><div class="t">乘法机器人基地</div><div class="d">99 乘法表 · 机器人 / 恐龙</div></div><div class="s" id="s-math"></div></a>
     <a class="card c2" href="pinyin.html"><div class="em">🚂</div><div><div class="t">拼音火车</div><div class="d">声母 · 韵母 · 拼读 · 声调</div></div><div class="s" id="s-py"></div></a>
+    <a class="card c4" href="ocean.html"><div class="em">🐋</div><div><div class="t">鲸鱼战队</div><div class="d">99 乘法表 · 鲸鱼变身打坏蛋</div></div><div class="s" id="s-ocean"></div></a>
     <a class="card c3" href="phonics.html"><div class="em">🔤</div><div><div class="t">Phonics 探险</div><div class="d">Letter sounds · Blending · Digraphs</div></div><div class="s" id="s-ph"></div></a>
   </div>
   <p class="stat" id="stat"></p>
@@ -37,7 +38,7 @@
   const GOAL=30;
   function today(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
   function read(k){try{return JSON.parse(localStorage.getItem(k)||'{}');}catch(e){return {};}}
-  const games=[['mult-robot-v1','s-math',9],['pinyin-train-v1','s-py',19],['phonics-v1','s-ph',12]];
+  const games=[['mult-robot-v1','s-math',9],['mult-ocean-v1','s-ocean',9],['pinyin-train-v1','s-py',19],['phonics-v1','s-ph',12]];
   let total=0,stars=0;
   games.forEach(([k,id,n])=>{
     const S=read(k);const d=(S.daily&&S.daily.date===today())?S.daily.n:0;total+=d;
