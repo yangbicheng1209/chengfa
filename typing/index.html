@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#eff5ff">
+  <meta name="description" content="按a到z的顺序跟练指法，连续打完整个字母表，挑战6秒。">
+  <title>字母小队 · A–Z 6秒挑战</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%232d5bdf'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='30' fill='white'%3Ea%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="sounds.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-key" aria-hidden="true">a</span><div><h1>字母小队</h1><span>A–Z · 6 秒挑战</span></div></div>
+      <div class="top-actions">
+        <a id="hallLink" href="../index.html">游戏大厅</a>
+        <button id="soundButton" type="button" aria-pressed="true">声音：开</button>
+        <button id="helpButton" type="button">怎么玩</button>
+      </div>
+    </header>
+
+    <main>
+      <nav id="lessonNav" class="lesson-nav" aria-label="选择练习关卡"></nav>
+      <section class="playground" aria-label="字母跟练">
+        <div class="session-line"><span id="lessonTag">跟着练 · 从 a 到 z</span><span id="roundCount">0 / 26</span></div>
+        <div class="progress" role="progressbar" aria-label="本关进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progressFill"></div></div>
+
+        <div class="mission">
+          <div id="targetTile" class="target-tile"><span id="targetLetter">a</span><span id="targetUpper">A 键</span></div>
+          <div class="instruction">
+            <p class="eyebrow" id="instructionLabel">看亮起的手指，跟着按</p>
+            <h2 id="fingerInstruction">左手 · 小指</h2>
+            <p id="movementInstruction">小指的家在 A。按一下，松开。</p>
+            <div id="feedback" class="feedback" role="status" aria-live="polite">从 a 开始，顺着打到 z。</div>
+          </div>
+          <div class="collection-count"><strong id="clock">—<span>秒</span></strong><span id="clockLabel">跟练不用计时</span><span id="bestLabel">挑战目标：6.00 秒</span></div>
+        </div>
+
+        <section class="hands-area" aria-label="手指位置示范，方向和你的双手一致">
+          <div class="hand-side"><div class="hand-heading"><span>你的左手</span><span>A S D F</span></div><div id="leftHand" class="hand-diagram"></div></div>
+          <div class="home-note"><span class="home-symbol" aria-hidden="true">⌂</span><strong>手指回家</strong><span>左手 A S D F<br>右手 J K L ;</span><small>拇指轻放空格</small></div>
+          <div class="hand-side"><div class="hand-heading"><span>你的右手</span><span>J K L ;</span></div><div id="rightHand" class="hand-diagram"></div></div>
+        </section>
+
+        <div class="sequence" id="sequence" aria-label="本关练习字母"></div>
+        <div id="keyboard" class="keyboard" aria-label="电脑键盘位置示范"></div>
+        <div class="keyboard-note"><span><b>F</b> 和 <b>J</b> 有小凸点，帮食指找家。</span><span>按完回家，接着打下一个。</span></div>
+
+      </section>
+
+      <section class="alphabet-section" aria-label="本次练过的字母"><div class="alphabet-heading"><h2>字母都认识了 <span id="collectedCount">0 / 26</span></h2><span id="practiceSummary">先练顺序，再练速度</span></div><div id="alphabetCollection" class="alphabet-collection"></div></section>
+      <div class="bottom-controls"><p class="bottom-note" id="deviceNote">用电脑实体键盘练手指。点屏幕上的键，只看位置示范。</p><button id="restartButton" type="button">从 a 重新来</button></div>
+    </main>
+  </div>
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-heading"><h2 id="helpTitle">双手先安家</h2><button id="closeHelp" type="button" aria-label="关闭说明">关闭</button></div>
+    <ol class="help-steps">
+      <li><b>找凸点</b><p>左手食指放 F，右手食指放 J。两颗小凸点，摸一摸就找到。</p></li>
+      <li><b>排好队</b><p>左手小指到食指：A、S、D、F。右手食指到小指：J、K、L、;。拇指轻放空格。</p></li>
+      <li><b>顺着打完整串</b><p>从 a、b、c 一直打到 z。看大字母和亮起的手指，用这个手指按一下，松开，再回自己的家。可以看真实键盘。</p></li>
+    </ol>
+    <div class="parent-tip"><b>跟练 → 计时 → 6 秒挑战</b><p>先把 a–z 打顺，再开计时。时间从按下 a 到按下 z；按错停在当前字母，时间继续走。26 个字母全部按对、没有错键、用时不超过 6 秒，就挑战成功。</p><p>手放松，小手够不到时可以自然移动。本游戏能判断按键，实际用了哪根手指需要大人帮忙观察。这里练的是字母键，练熟后再练拼音。大小写都接受；若输入法挡住画面，请切到英文。</p></div>
+    <label class="voice-setting"><input id="voiceToggle" type="checkbox" checked>跟练时读出手指提示</label><p class="voice-note" id="voiceNote">按键时有小木琴声，完成后有过关旋律。计时中只播放短音效。</p>
+    <button id="startFromHelp" class="primary-button" type="button">我准备好啦</button>
+  </dialog>
+
+  <dialog id="finishDialog" aria-labelledby="finishTitle">
+    <div class="finish-mark" aria-hidden="true">★</div><p class="eyebrow">a 到 z，打完啦</p><h2 id="finishTitle">字母小队集合！</h2><p id="finishDescription"></p><div id="finishLetters" class="finish-letters"></div><p id="reviewDescription"></p>
+    <div class="finish-actions"><button id="repeatLesson" type="button">再来一轮</button><button id="nextLesson" class="primary-button" type="button">开始计时</button></div><button id="closeFinish" type="button" class="text-button">先休息一下</button>
+  </dialog>
+</body>
+</html>
